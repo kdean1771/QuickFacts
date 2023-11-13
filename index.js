@@ -131,3 +131,23 @@ getcoordsbutton.addEventListener('click', async (event) => {
 corsbutton.addEventListener('click', function() {
   window.location.href = 'https://cors-anywhere.herokuapp.com/corsdemo';
 })
+
+
+
+document.querySelector('.control-button').addEventListener('click', function() {
+  const button = this;
+  
+  // Apply a small scale transform when clicked
+  button.style.transform = 'scale(0.9)';
+
+  // Wait for a moment before running the bounce animation
+  setTimeout(() => {
+      button.classList.add('control-button-clicked');
+  }, 100);
+
+  // Remove the class after the animation completes
+  button.addEventListener('animationend', () => {
+      button.classList.remove('control-button-clicked');
+      button.style.transform = 'scale(1)'; // Reset transform
+  });
+});
