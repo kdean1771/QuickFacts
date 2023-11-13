@@ -40,4 +40,7 @@ body, html {
     background-color: #0056b3; /* Slightly darker shade on hover */
 }
 
-
+.cors-button {
+    position: absolute;
+    bottom: 5%;
+}
