@@ -1,5 +1,6 @@
 const getcoordsbutton = document.getElementById("get-coords")
 const dataResultArea = document.getElementById("mainResults")
+const corsbutton = document.getElementById("get-cors")
 
 function removeHtmlTags(input) {
   return input.replace(/<[^>]+>|\([^)]+\)/g, "");
@@ -124,4 +125,11 @@ getcoordsbutton.addEventListener('click', async (event) => {
         });
     });
 
+})
+
+
+
+
+corsbutton.addEventListener('click', function() {
+  window.location.href = 'https://cors-anywhere.herokuapp.com/corsdemo';
 })
