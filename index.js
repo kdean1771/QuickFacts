@@ -49,31 +49,33 @@ getcoordsbutton.addEventListener('click', async (event) => {
         .then( data => {
           console.log(data)
           let parts = data.results[0].address_components;
-          parts.forEach(part => {
-            
-            let state;
+          let state;
+          let city;
 
-            for (const part of parts) {
-              if (part.types.includes("administrative_area_level_1")) {
-                state = part.long_name;
-                console.log(state);
-              }
-            
-              if (part.types.includes("locality")) {
-                city = part.long_name;
-                console.log(city);
-              }
+          for (const part of parts) {
+            if (part.types.includes("administrative_area_level_1") && !state) {
+              state = part.long_name;
+              console.log(state);
             }
+
+            if (part.types.includes("locality") && !city) {
+              city = part.long_name;
+              console.log(city);
+            }
+
+            // If both city and state have been set, we can break out of the loop early
+            if (city && state) {
+              break;
+            }
+          }
             
             
             
             if (city) {
-              dataResultArea.textContent = `City: ${city} ${state}, Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude}`
-
-              let finalExtractagain; // Variable to store the extract
-
-              let url5 = `https://cors-anywhere.herokuapp.com/https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exsentences=10&exlimit=1&titles=${city}&explaintext=1&formatversion=2&format=json`;
-
+              document.getElementById('infoArea').textContent = `City: ${city}, State: ${state}, Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude}`;
+            
+              let url5 = `https://cors-anywhere.herokuapp.com/https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exsentences=10&exlimit=1&titles=${encodeURIComponent(city)}&explaintext=1&formatversion=2&format=json`;
+            
               fetch(url5, {
                 headers: {
                   'x-requested-with': 'anyValue'
@@ -81,38 +83,47 @@ getcoordsbutton.addEventListener('click', async (event) => {
               })
               .then(response => response.json())
               .then(data => {
-                const extract = data.query.pages[0].extract;
-
-                if (extract && extract.includes("may refer to:")) {
-                  console.log('Ambiguous city name detected.');
-    
-                  let url6 = `https://cors-anywhere.herokuapp.com/https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exsentences=10&exlimit=1&titles=${city},_${state}&explaintext=1&formatversion=2&format=json`;
-    
-                  return fetch(url6, {
-                    headers: {
-                      'x-requested-with': 'anyValue'
-                    }
-                  })
-                  .then(response => response.json())
-                  .then(data => data.query.pages[0].extract); // Return the new extract
+                let page = data.query.pages[0];
+                if (!page.missing) {
+                  const extract = page.extract;
+                  if (extract.includes("may refer to:")) {
+                    console.log('Ambiguous city name detected.');
+            
+                    let url6 = `https://cors-anywhere.herokuapp.com/https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exsentences=10&exlimit=1&titles=${encodeURIComponent(city)},_${encodeURIComponent(state)}&explaintext=1&formatversion=2&format=json`;
+            
+                    return fetch(url6, {
+                      headers: {
+                        'x-requested-with': 'anyValue'
+                      }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                      let newPage = data.query.pages[0];
+                      if (!newPage.missing) {
+                        return newPage.extract;
+                      }
+                      return extract; // Fallback to the original extract if the new one is missing
+                    });
+                  }
+                  return extract; // Not ambiguous, use the original extract
                 }
-  
-                return extract; // Return the original extract
+                throw new Error('Wikipedia page missing');
               })
-              .then(result => {
-                finalExtractagain = result; // Save the final extract
-                console.log(finalExtractagain); // Logs the final extract
-                randomsentence(finalExtractagain);
+              .then(finalExtract => {
+                if (finalExtract) {
+                  randomsentence(finalExtract);
+                }
               })
               .catch(error => {
                 console.error('Error:', error);
+                dataResultArea.textContent = `An error occurred while fetching information.`;
               });
             };
           });
         });
     });
 
-})
+
 
 
 
