@@ -6,42 +6,29 @@ function removeHtmlTags(input) {
   return input.replace(/<[^>]+>|\([^)]+\)/g, "");
 }
 
+
+function randomsentence(finalExtractagain) {
+  let sentences = finalExtractagain.split(/(?<!\d)\.(?!\d)/).map(s => s.trim()).filter(s => s);
+
+  // Check if there are sentences available
+  if (sentences && sentences.length) {
+    // Choose a random sentence.
+    let randomSentence = sentences[Math.floor(Math.random() * sentences.length)];
+
+    // Display the random sentence in the data results area.
+    let dataResultArea = document.getElementById('mainResults');
+    dataResultArea.textContent = randomSentence;
+  } else {
+    // If no sentences are found, display the original extract.
+    let dataResultArea = document.getElementById('mainResults');
+    dataResultArea.textContent = extract;
+  }
+}
+
+
 let finalExtract; // Variable to store the extract
 
-let url3 = `https://cors-anywhere.herokuapp.com/https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exsentences=10&exlimit=1&titles=Monkland&explaintext=1&formatversion=2&format=json`;
 
-fetch(url3, {
-  headers: {
-    'x-requested-with': 'anyValue'
-  }
-})
-.then(response => response.json())
-.then(data => {
-  const extract = data.query.pages[0].extract;
-
-  if (extract && extract.includes("may refer to:")) {
-    console.log('Ambiguous city name detected.');
-    
-    let url4 = `https://cors-anywhere.herokuapp.com/https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exsentences=10&exlimit=1&titles=Monkland,_Queensland&explaintext=1&formatversion=2&format=json`;
-    
-    return fetch(url4, {
-      headers: {
-        'x-requested-with': 'anyValue'
-      }
-    })
-    .then(response => response.json())
-    .then(data => data.query.pages[0].extract); // Return the new extract
-  }
-  
-  return extract; // Return the original extract
-})
-.then(result => {
-  finalExtract = result; // Save the final extract
-  console.log(finalExtract); // Logs the final extract
-})
-.catch(error => {
-  console.error('Error:', error);
-});
 
 
 
@@ -115,7 +102,7 @@ getcoordsbutton.addEventListener('click', async (event) => {
               .then(result => {
                 finalExtractagain = result; // Save the final extract
                 console.log(finalExtractagain); // Logs the final extract
-                dataResultArea.textContent = finalExtractagain
+                randomsentence(finalExtractagain);
               })
               .catch(error => {
                 console.error('Error:', error);
