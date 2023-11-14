@@ -54,12 +54,21 @@ body, html {
     background-color: #0056b3; /* Slightly darker shade on hover */
 }
 
-.cors-button {
+.buttons-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
     position: absolute;
-    bottom: 5%;
+    bottom: 5%
 }
 
+.cors-button {
+    margin: 5px;
+}
 
+.search-button {
+    margin: 5px;
+}
 
 
 @media (max-width: 800px) {

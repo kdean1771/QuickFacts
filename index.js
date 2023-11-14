@@ -1,6 +1,7 @@
 const getcoordsbutton = document.getElementById("get-coords")
 const dataResultArea = document.getElementById("mainResults")
 const corsbutton = document.getElementById("get-cors")
+const searchbutton = document.getElementById("searchonline")
 
 function removeHtmlTags(input) {
   return input.replace(/<[^>]+>|\([^)]+\)/g, "");
@@ -28,7 +29,8 @@ function randomsentence(finalExtractagain) {
 
 let finalExtract; // Variable to store the extract
 
-
+let globalCity;
+let globalState;
 
 
 
@@ -65,6 +67,8 @@ getcoordsbutton.addEventListener('click', async (event) => {
 
             // If both city and state have been set, we can break out of the loop early
             if (city && state) {
+              globalCity = city; // Update the global variable
+              globalState = state; // Update the global variable
               break;
             }
           }
@@ -131,6 +135,15 @@ getcoordsbutton.addEventListener('click', async (event) => {
 corsbutton.addEventListener('click', function() {
   window.location.href = 'https://cors-anywhere.herokuapp.com/corsdemo';
 })
+
+searchbutton.addEventListener('click', function() {
+  if (globalCity && globalState) {
+      window.location.href = `https://www.google.com/search?q=${encodeURIComponent(globalCity)}+${encodeURIComponent(globalState)}`;
+  } else {
+      console.error('City or state is not defined.');
+      // Handle the error case here, maybe inform the user
+  }
+});
 
 
 
