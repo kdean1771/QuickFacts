@@ -11,23 +11,19 @@ function removeHtmlTags(input) {
 function randomsentence(finalExtractagain) {
   let sentences = finalExtractagain.split(/(?<!\d)\.(?!\d)/).map(s => s.trim()).filter(s => s);
 
-  // Check if there are sentences available
   if (sentences && sentences.length) {
-    // Choose a random sentence.
     let randomSentence = sentences[Math.floor(Math.random() * sentences.length)];
 
-    // Display the random sentence in the data results area.
     let dataResultArea = document.getElementById('mainResults');
     dataResultArea.textContent = randomSentence;
   } else {
-    // If no sentences are found, display the original extract.
     let dataResultArea = document.getElementById('mainResults');
     dataResultArea.textContent = extract;
   }
 }
 
 
-let finalExtract; // Variable to store the extract
+let finalExtract;
 
 let globalCity;
 let globalState;
@@ -65,10 +61,9 @@ getcoordsbutton.addEventListener('click', async (event) => {
               console.log(city);
             }
 
-            // If both city and state have been set, we can break out of the loop early
             if (city && state) {
-              globalCity = city; // Update the global variable
-              globalState = state; // Update the global variable
+              globalCity = city;
+              globalState = state;
               break;
             }
           }
@@ -106,10 +101,10 @@ getcoordsbutton.addEventListener('click', async (event) => {
                       if (!newPage.missing) {
                         return newPage.extract;
                       }
-                      return extract; // Fallback to the original extract if the new one is missing
+                      return extract;
                     });
                   }
-                  return extract; // Not ambiguous, use the original extract
+                  return extract;
                 }
                 throw new Error('Wikipedia page missing');
               })
@@ -141,7 +136,6 @@ searchbutton.addEventListener('click', function() {
       window.location.href = `https://www.google.com/search?q=${encodeURIComponent(globalCity)}+${encodeURIComponent(globalState)}`;
   } else {
       console.error('City or state is not defined.');
-      // Handle the error case here, maybe inform the user
   }
 });
 
@@ -150,17 +144,14 @@ searchbutton.addEventListener('click', function() {
 document.querySelector('.control-button').addEventListener('click', function() {
   const button = this;
   
-  // Apply a small scale transform when clicked
   button.style.transform = 'scale(0.9)';
 
-  // Wait for a moment before running the bounce animation
   setTimeout(() => {
       button.classList.add('control-button-clicked');
   }, 100);
 
-  // Remove the class after the animation completes
   button.addEventListener('animationend', () => {
       button.classList.remove('control-button-clicked');
-      button.style.transform = 'scale(1)'; // Reset transform
+      button.style.transform = 'scale(1)';
   });
 });

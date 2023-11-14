@@ -51,7 +51,7 @@ body, html {
 }
 
 .control-button:hover {
-    background-color: #0056b3; /* Slightly darker shade on hover */
+    background-color: #0056b3;
 }
 
 .buttons-container {
@@ -84,7 +84,7 @@ body, html {
         transform: scale(1);
     }
     50% {
-        transform: scale(1.2); /* The scale value here determines the "strength" of the bounce */
+        transform: scale(1.2);
     }
 }
 
